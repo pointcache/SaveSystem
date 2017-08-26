@@ -1,5 +1,6 @@
 ﻿namespace SaveSystem {
     using System.Collections;
+    using SaveSystem.Utility;
     using UnityEngine;
 
     public class SavedComponent : MonoBehaviour {
