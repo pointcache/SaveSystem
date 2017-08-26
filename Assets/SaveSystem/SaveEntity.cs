@@ -19,6 +19,8 @@
         [NotEditableInt]
         public int blueprintID;
 
+        public bool SaveDisabled;
+
 
         public int ID
         {
@@ -34,48 +36,31 @@
         private void Reset() {
             for (int i = 0; i < 50; i++) {
                 UnityEditorInternal.ComponentUtility.MoveComponentUp(this);
+
             }
         }
 #endif
 
 
 
+        private void Awake() {
+            if (SaveDisabled)
+                SaveEntityManager.RegisterEntity(this);
+        }
+
         private void OnEnable() {
-            SaveEntityManager.RegisterEntity(this);
-            AddEntityReferenceToColliders();
+            if (!SaveDisabled)
+                SaveEntityManager.RegisterEntity(this);
         }
 
         private void OnDisable() {
-            SaveEntityManager.UnRegisterEntity(this);
+            if (!SaveDisabled)
+                SaveEntityManager.RegisterEntity(this);
         }
 
-
-        private void AddEntityReferenceToColliders() {
-
-            Transform tr = transform;
-
-            int count = tr.childCount;
-
-            for (int i = 0; i < count; i++) {
-
-                AddEntityReferenceToCollidersRecursive(tr.GetChild(i));
-
-            }
-
-        }
-
-        private void AddEntityReferenceToCollidersRecursive(Transform tr) {
-
-            int count = tr.childCount;
-
-            for (int i = 0; i < count; i++) {
-
-                AddEntityReferenceToCollidersRecursive(tr.GetChild(i));
-
-            }
-
-            if (tr.GetComponent<Collider>() && !tr.GetComponent<EntityReference>())
-                tr.gameObject.AddComponent<EntityReference>();
+        private void OnDestroy() {
+            if (SaveDisabled)
+                SaveEntityManager.UnRegisterEntity(this);
         }
 
         public void MakePersistent() {

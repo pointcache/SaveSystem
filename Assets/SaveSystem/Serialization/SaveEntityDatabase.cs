@@ -116,7 +116,6 @@
             HashSet<int> ids = new HashSet<int>();
 
             DatabaseManifest manifest = new DatabaseManifest();
-            manifest.GameVersion = ProjectInfo.Current.Version;
             string resfolder = "Resources/" + SaveSystemSettings.Current.EntitiesFolder + "/";
 
 
@@ -168,7 +167,7 @@
                 }
 
                 if (entity.entityID == 0) {
-                    entity.entityID = GameObjectUtils.GetUniqueID(ids);
+                    entity.entityID = SaveSystemUtilities.GetUniqueID(ids);
                 }
 
                 if (entity.instanceID != 0) {
@@ -223,7 +222,7 @@
 
                 foreach (var c in components) {
                     if (c.componentID == 0) {
-                        c.componentID = GameObjectUtils.GetUniqueID(comps_in_entity);
+                        c.componentID = SaveSystemUtilities.GetUniqueID(comps_in_entity);
                     }
                     comps_in_entity.Add(c.componentID);
                 }

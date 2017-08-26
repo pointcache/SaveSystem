@@ -52,7 +52,7 @@
         public void SaveFile() {
             SaveObject save = CreateSaveObjectFromScene();
 
-            string directory = PathUtilities.CustomDataPath + "/" + FolderName;
+            string directory = SaveSystemUtilities.CustomDataPath + "/" + FolderName;
 
             if (!Directory.Exists(directory)) {
                 Directory.CreateDirectory(directory);
@@ -85,7 +85,7 @@
                     root = rootGO.transform;
             }
 
-            this.OneFrameDelay(() => LoadFromSaveFile(PathUtilities.CustomDataPath + "/" + FolderName + "/" + FileName + Extension, root));
+            this.OneFrameDelay(() => LoadFromSaveFile(SaveSystemUtilities.CustomDataPath + "/" + FolderName + "/" + FileName + Extension, root));
         }
 
 #if UNITY_EDITOR
@@ -440,7 +440,7 @@
             file.isBlueprint = isBlueprint;
             CompRefSerializationProcessor.blueprint = isBlueprint;
             if (isBlueprint && entity.blueprintID == 0)
-                entity.blueprintID = GameObjectUtils.GetUniqueID(bp_ids);
+                entity.blueprintID = SaveSystemUtilities.GetUniqueID(bp_ids);
 
             eobj.blueprint_ID = entity.blueprintID;
             Transform tr = entity.transform;
@@ -486,7 +486,7 @@
                         eobj.parentName = "null";
                     }
                     else
-                        eobj.parentName = tr.parent.Null() ? "null" : tr.parent.name;
+                        eobj.parentName = tr.parent == null ? "null" : tr.parent.name;
                 }
             }
             eobj.gameObjectName = entity.name;

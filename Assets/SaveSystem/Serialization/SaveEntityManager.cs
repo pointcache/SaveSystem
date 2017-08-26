@@ -16,7 +16,7 @@
         internal static event Action<SaveEntity> OnRemoved;
 
         private static HashSet<int> registeredEntitiesIDs = new HashSet<int>();
-        
+
         public static void MarkPersistent(SaveEntity e) {
             SceneEntities.Remove(e.entityID);
             PersistentEntities.Add(e.entityID, e);
@@ -24,7 +24,7 @@
 
         internal static void RegisterEntity(SaveEntity e) {
             var persistent_root = e.transform.GetComponentInParent<PersistentDataSystem>();
-            if (persistent_root.Null()) {
+            if (persistent_root != null) {
                 if (SceneEntities.ContainsKey(e.ID)) {
                     Debug.Log("Entity with this ID already exists, i will assume you duplicated it in the editor, so ill assign a new instance ID for you.");
                     e.instanceID = 0;
@@ -56,7 +56,7 @@
             if (registeredEntitiesIDs.Contains(id))
                 id = GetUniqueIdRecursive(id);
             registeredEntitiesIDs.Add(id);
-            return id;  
+            return id;
         }
 
         private static int GetUniqueIdRecursive(int previous) {

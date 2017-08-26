@@ -92,7 +92,7 @@
             info.creationDate = DateTime.Now;
             info.data = file;
 
-            string path = PathUtilities.CustomDataPath + "/" + FolderName;
+            string path = SaveSystemUtilities.CustomDataPath + "/" + FolderName;
 
             if (!Directory.Exists(path)) {
                 Directory.CreateDirectory(path);
@@ -136,7 +136,7 @@
         }
 
         private void CompleteLoad() {
-            string path = PathUtilities.CustomDataPath + "/" + FolderName + "/" + FileName + extension;
+            string path = SaveSystemUtilities.CustomDataPath + "/" + FolderName + "/" + FileName + extension;
 
             if (File.Exists(path)) {
                 var info = SaveSystem.DeserializeAs<PersistentDataInfo>(path);
