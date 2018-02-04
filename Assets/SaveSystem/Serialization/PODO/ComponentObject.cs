@@ -12,6 +12,6 @@
         public int component_ID;
         public bool initialized;
         public bool enabled;
-        public SerializedData data;
+        public SaveData data;
     }
 }

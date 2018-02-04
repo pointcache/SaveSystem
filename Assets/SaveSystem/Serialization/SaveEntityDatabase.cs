@@ -204,6 +204,9 @@
             prefabObjects = new List<GameObject>(1000);
             foreach (var item in allData) {
                 GameObject go = item as GameObject;
+                if (go == null)
+                    continue;
+
                 var entity = go.GetComponent<SaveEntity>();
                 if (!entity) {
                     Debug.LogError("Database: GameObject without entity found, skipping.", go);

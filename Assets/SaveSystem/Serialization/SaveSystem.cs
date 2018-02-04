@@ -140,6 +140,7 @@
             Dictionary<int, Dictionary<int, SavedComponent>> allComps = new Dictionary<int, Dictionary<int, SavedComponent>>();
             Dictionary<int, SaveEntity> allEntities = new Dictionary<int, SaveEntity>();
             Dictionary<EntityObject, SaveEntity> toParent = new Dictionary<EntityObject, SaveEntity>();
+            List<SavedComponent> allComponents = new List<SavedComponent>();
 
             foreach (var eobj in save.entities) {
                 var prefab = SaveEntityDatabase.GetPrefab(eobj.database_ID);
@@ -241,16 +242,27 @@
                                 allComps.Add(entity.ID, injectionDict);
                             }
                             injectionDict.Add(component.componentID, component);
+
+                            allComponents.Add(component);
                         }
                     }
                 }
 
                 if (save.isBlueprint)
                     entity.instanceID = 0;
+
+
+
                 prefab.SetActive(prefabState);
-                entity.gameObject.SetActive(true);
+
+                if (eobj.Enabled) {
+                    entity.gameObject.SetActive(true);
+                }
+                else {
+                    entity.InitializeDisabled();
+                }
                 //HACK change this to something like interface.
-                entity.gameObject.BroadcastMessage("OnAfterLoad", SendMessageOptions.DontRequireReceiver);
+                //entity.gameObject.BroadcastMessage("OnAfterLoad", SendMessageOptions.DontRequireReceiver);
 
             }
 
@@ -343,6 +355,9 @@
                 }
             }
 
+            foreach (var comp in allComponents) {
+                comp.SendMessage("OnAfterLoad", SendMessageOptions.DontRequireReceiver);
+            }
 
         }
 
@@ -447,6 +462,7 @@
             eobj.database_ID = entity.entityID;
             eobj.instance_ID = entity.instanceID;
             eobj.prefabPath = SaveEntityDatabase.GetPrefabPath(entity.entityID);
+            eobj.Enabled = ent.gameObject.activeSelf;
 
             if (isBlueprint) {
                 eobj.position = root.InverseTransformPoint(tr.position);
@@ -543,20 +559,20 @@
             }
         }
 
-        static SerializedData GetDataFromComponent(SavedComponent comp) {
+        static SaveData GetDataFromComponent(SavedComponent comp) {
             if (comp == null)
                 return null;
             Type t = comp.GetType();
             var field = findDataField(t);
             if (field != null) {
-                var data = field.GetValue(comp) as SerializedData;
+                var data = field.GetValue(comp) as SaveData;
                 return data;
             }
             else
                 return null;
         }
 
-        static void SetDataForComponent(SavedComponent comp, SerializedData data) {
+        static void SetDataForComponent(SavedComponent comp, SaveData data) {
             Type t = comp.GetType();
             var field = findDataField(t);
             if (field != null)
@@ -566,7 +582,7 @@
         static FieldInfo findDataField(Type t) {
             var fields = t.GetFields();
             foreach (var f in fields) {
-                if (f.FieldType.BaseType == typeof(SerializedData))
+                if (f.FieldType.BaseType == typeof(SaveData))
                     return f;
             }
             return null;

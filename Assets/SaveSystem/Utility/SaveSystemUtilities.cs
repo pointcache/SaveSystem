@@ -1,4 +1,4 @@
-﻿namespace SaveSystem {
+﻿namespace SaveSystem.Utility {
 
     using UnityEngine;
     using System;

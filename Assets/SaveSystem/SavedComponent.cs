@@ -11,11 +11,16 @@
         protected bool m_initialized;
         public bool Initialized { get { return m_initialized; } }
 
-        public virtual void Awake() {
+        protected virtual void Awake() {
             if (!m_initialized) {
                 Initialize();
                 m_initialized = true;
             }
+            entity = GetComponentInParent<SaveEntity>();
+        }
+
+        public void InjectEntity(SaveEntity entity) {
+            this.entity = entity;
         }
 
         SaveEntity entity;
@@ -53,7 +58,7 @@
     }
 
 
-    public abstract class SerializedData {
+    public abstract class SaveData {
 
     }
 

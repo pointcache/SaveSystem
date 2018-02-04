@@ -23,32 +23,37 @@
         }
 
         internal static void RegisterEntity(SaveEntity e) {
-            var persistent_root = e.transform.GetComponentInParent<PersistentDataSystem>();
-            if (persistent_root != null) {
-                if (SceneEntities.ContainsKey(e.ID)) {
-                    Debug.Log("Entity with this ID already exists, i will assume you duplicated it in the editor, so ill assign a new instance ID for you.");
-                    e.instanceID = 0;
-                }
-                SceneEntities.Add(e.ID, e);
 
+            if (SceneEntities.ContainsKey(e.ID)) {
+                Debug.Log("Entity with this ID already exists, i will assume you duplicated it in the editor, so ill assign a new instance ID for you.");
+                e.instanceID = 0;
             }
-            else {
-                if (PersistentEntities.ContainsKey(e.ID)) {
-                    Debug.Log("Entity with this ID already exists, i will assume you duplicated it in the editor, so ill assign a new instance ID for you.");
-                    e.instanceID = 0;
-                }
-                PersistentEntities.Add(e.ID, e);
-            }
+            SceneEntities.Add(e.ID, e);
+
+            //var persistent_root = e.transform.GetComponentInParent<PersistentDataSystem>();
+            //if (persistent_root != null) {
+            //    
+            //
+            //}
+            //else {
+            //    if (PersistentEntities.ContainsKey(e.ID)) {
+            //        Debug.Log("Entity with this ID already exists, i will assume you duplicated it in the editor, so ill /assign /a new instance ID for you.");
+            //        e.instanceID = 0;
+            //    }
+            //    PersistentEntities.Add(e.ID, e);
+            //}
 
             if (OnAdded != null)
                 OnAdded(e);
         }
 
         internal static void UnRegisterEntity(SaveEntity e) {
-            SceneEntities.Remove(e.ID);
-            PersistentEntities.Remove(e.ID);
-            if (OnRemoved != null)
-                OnRemoved(e);
+            if (Application.isPlaying) {
+                SceneEntities.Remove(e.ID);
+                PersistentEntities.Remove(e.ID);
+                if (OnRemoved != null)
+                    OnRemoved(e);
+            }
         }
 
         internal static int GetUniqieInstanceID() {

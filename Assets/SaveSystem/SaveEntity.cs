@@ -19,13 +19,10 @@
         [NotEditableInt]
         public int blueprintID;
 
-        public bool SaveDisabled;
-
-
         public int ID
         {
             get {
-                if (instanceID == 0) {
+                if (instanceID == 0 && Application.isPlaying) {
                     instanceID = SaveEntityManager.GetUniqieInstanceID();
                 }
                 return instanceID;
@@ -41,26 +38,19 @@
         }
 #endif
 
-
+        public void InitializeDisabled() {
+            var comps = GetComponentsInChildren<SavedComponent>(true);
+            foreach (var comp in comps) {
+                comp.InjectEntity(this);
+            }
+        }
 
         private void Awake() {
-            if (SaveDisabled)
-                SaveEntityManager.RegisterEntity(this);
-        }
-
-        private void OnEnable() {
-            if (!SaveDisabled)
-                SaveEntityManager.RegisterEntity(this);
-        }
-
-        private void OnDisable() {
-            if (!SaveDisabled)
-                SaveEntityManager.RegisterEntity(this);
+            SaveEntityManager.RegisterEntity(this);
         }
 
         private void OnDestroy() {
-            if (SaveDisabled)
-                SaveEntityManager.UnRegisterEntity(this);
+            SaveEntityManager.UnRegisterEntity(this);
         }
 
         public void MakePersistent() {

@@ -7,6 +7,7 @@
     using System;
 
     public static class SerializationHelper {
+
         public static bool Serialize(object obj, string path, bool beautify) {
             fsSerializer _serializer = new fsSerializer();
             fsData data;
@@ -67,5 +68,14 @@
             var asset = Resources.Load(path) as TextAsset;
             return LoadFromString<T>(asset.text);
         }
+
+        public static T Copy<T>(object value) {
+
+            string ser = Serialize(value, false);
+            return (T) Deserialize(typeof(T), ser);
+
+        }
+
+
     } 
 }

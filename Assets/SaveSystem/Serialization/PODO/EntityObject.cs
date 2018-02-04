@@ -17,6 +17,8 @@
         public int parent_entity_ID;
         public int parent_component_ID;
 
+        public bool Enabled;
+
         public Vector3 position;
         public Vector3 rotation;
     }

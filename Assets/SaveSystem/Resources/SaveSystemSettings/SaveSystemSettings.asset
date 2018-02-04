@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Name: SaveSystemSettings
   m_EditorClassIdentifier: 
   EntitiesFolder: Entities
+  DatabaseFolder: Database
   DatabaseManifest: manifest.db
   CustomDataFolder: CustomData
